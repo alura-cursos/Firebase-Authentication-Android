@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import br.com.alura.aluraesporte.R
+import br.com.alura.aluraesporte.ui.viewmodel.CadastroUsuarioViewModel
 import br.com.alura.aluraesporte.ui.viewmodel.ComponentesVisuais
 import br.com.alura.aluraesporte.ui.viewmodel.EstadoAppViewModel
 import kotlinx.android.synthetic.main.cadastro_usuario.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class CadastroUsuarioFragment : Fragment() {
 
@@ -18,6 +20,7 @@ class CadastroUsuarioFragment : Fragment() {
         findNavController()
     }
     private val estadoAppViewModel: EstadoAppViewModel by sharedViewModel()
+    private val viewModel: CadastroUsuarioViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +38,10 @@ class CadastroUsuarioFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         estadoAppViewModel.temComponentes = ComponentesVisuais()
         cadastro_usuario_botao_cadastrar.setOnClickListener {
-            controlador.popBackStack()
+            val email = cadastro_usuario_email.editText?.text.toString()
+            val senha = cadastro_usuario_senha.editText?.text.toString()
+            viewModel.cadastra(email, senha)
+//            controlador.popBackStack()
         }
     }
 

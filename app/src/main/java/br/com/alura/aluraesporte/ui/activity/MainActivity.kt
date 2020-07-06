@@ -30,18 +30,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-
-        val firebaseAuth = Firebase.auth
-//        cadastraUsuario(firebaseAuth)
-//        autenticaUsuario(firebaseAuth)
-        val usuarioFirebase: FirebaseUser? = firebaseAuth.currentUser
-        if(usuarioFirebase != null){
-            Toast.makeText(this, "Usuário logado ${usuarioFirebase.email}", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Não tem usuário logado $usuarioFirebase", Toast.LENGTH_SHORT).show()
-        }
-        firebaseAuth.signOut()
-
         controlador.addOnDestinationChangedListener { _,
                                                       destination,
                                                       _ ->
@@ -63,28 +51,6 @@ class MainActivity : AppCompatActivity() {
         }
         main_activity_bottom_navigation
             .setupWithNavController(controlador)
-    }
-
-    private fun autenticaUsuario(firebaseAuth: FirebaseAuth) {
-        firebaseAuth.signInWithEmailAndPassword("alex@aluraesporte.com", "teste123")
-            .addOnSuccessListener {
-                Toast.makeText(this, "Usuário logado com sucesso", Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener {
-                Log.e(TAG, "onCreate: ", it)
-                Toast.makeText(this, "Autenticação falhou", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun cadastraUsuario(firebaseAuth: FirebaseAuth) {
-        val tarefa =
-            firebaseAuth.createUserWithEmailAndPassword("alex.felipe12345@aluraesporte.com", "teste1")
-        tarefa.addOnSuccessListener {
-            Toast.makeText(this, "Usuário foi cadastrado com sucesso", Toast.LENGTH_SHORT).show()
-        }
-        tarefa.addOnFailureListener {
-            Log.e(TAG, "onCreate: ", it)
-            Toast.makeText(this, "Aconteceu uma falha ao cadastrar", Toast.LENGTH_SHORT).show()
-        }
     }
 
 }
