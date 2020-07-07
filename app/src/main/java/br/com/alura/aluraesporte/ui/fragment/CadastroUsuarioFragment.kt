@@ -43,8 +43,8 @@ class CadastroUsuarioFragment : Fragment() {
             val email = cadastro_usuario_email.editText?.text.toString()
             val senha = cadastro_usuario_senha.editText?.text.toString()
             viewModel.cadastra(email, senha).observe(viewLifecycleOwner, Observer {
-                it?.let {cadastrado ->
-                    if(cadastrado){
+                it?.let {recurso ->
+                    if(recurso.dado){
                         Snackbar.make(
                             view,
                             "Cadastro realizado com sucesso",
@@ -52,9 +52,10 @@ class CadastroUsuarioFragment : Fragment() {
                         ).show()
                         controlador.popBackStack()
                     } else {
+                        val mensagemErro = recurso.erro ?: "Ocorreu uma falha no cadastro"
                         Snackbar.make(
                             view,
-                            "Ocorreu uma falha no cadastro",
+                            mensagemErro,
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }

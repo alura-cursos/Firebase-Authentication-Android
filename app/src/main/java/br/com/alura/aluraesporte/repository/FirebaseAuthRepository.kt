@@ -29,17 +29,17 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
             }
     }
 
-    fun cadastra(email: String, senha: String): LiveData<Boolean> {
-        val liveData = MutableLiveData<Boolean>()
+    fun cadastra(email: String, senha: String): LiveData<Resource<Boolean>> {
+        val liveData = MutableLiveData<Resource<Boolean>>()
         val tarefa =
             firebaseAuth.createUserWithEmailAndPassword(email, senha)
         tarefa.addOnSuccessListener {
             Log.i(TAG, "cadastra: cadastro sucedido")
-            liveData.value = true
+            liveData.value = Resource(true)
         }
         tarefa.addOnFailureListener {
             Log.e(TAG, "cadastra: cadastro falhou", it)
-            liveData.value = false
+            liveData.value = Resource(false, "Falha no cadastro")
         }
         return liveData
     }
