@@ -3,8 +3,7 @@ package br.com.alura.aluraesporte.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 
 private const val TAG = "FirebaseAuthRepository"
 
@@ -37,9 +36,15 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
             Log.i(TAG, "cadastra: cadastro sucedido")
             liveData.value = Resource(true)
         }
-        tarefa.addOnFailureListener {
-            Log.e(TAG, "cadastra: cadastro falhou", it)
-            liveData.value = Resource(false, "Falha no cadastro")
+        tarefa.addOnFailureListener {exception ->
+            Log.e(TAG, "cadastra: cadastro falhou", exception)
+            val mensagemErro: String = when(exception){
+                is FirebaseAuthWeakPasswordException -> "Senha precisa de pelo menos 6 dígitos"
+                is FirebaseAuthInvalidCredentialsException -> "E-mail inválido"
+                is FirebaseAuthUserCollisionException -> "E-mail já cadastrado"
+                else -> "Erro desconhecido"
+            }
+            liveData.value = Resource(false, mensagemErro)
         }
         return liveData
     }
