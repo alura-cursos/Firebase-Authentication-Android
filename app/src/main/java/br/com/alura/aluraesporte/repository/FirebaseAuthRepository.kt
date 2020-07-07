@@ -1,6 +1,8 @@
 package br.com.alura.aluraesporte.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -27,15 +29,19 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
             }
     }
 
-    fun cadastra(email: String, senha: String) {
+    fun cadastra(email: String, senha: String): LiveData<Boolean> {
+        val liveData = MutableLiveData<Boolean>()
         val tarefa =
             firebaseAuth.createUserWithEmailAndPassword(email, senha)
         tarefa.addOnSuccessListener {
             Log.i(TAG, "cadastra: cadastro sucedido")
+            liveData.value = true
         }
         tarefa.addOnFailureListener {
             Log.e(TAG, "cadastra: cadastro falhou", it)
+            liveData.value = false
         }
+        return liveData
     }
 
 }
