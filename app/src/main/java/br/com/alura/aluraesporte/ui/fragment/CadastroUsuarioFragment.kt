@@ -40,28 +40,54 @@ class CadastroUsuarioFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         estadoAppViewModel.temComponentes = ComponentesVisuais()
         cadastro_usuario_botao_cadastrar.setOnClickListener {
+
+            cadastro_usuario_email.error = null
+            cadastro_usuario_senha.error = null
+            cadastro_usuario_confirma_senha.error = null
+
             val email = cadastro_usuario_email.editText?.text.toString()
             val senha = cadastro_usuario_senha.editText?.text.toString()
-            viewModel.cadastra(email, senha).observe(viewLifecycleOwner, Observer {
-                it?.let {recurso ->
-                    if(recurso.dado){
-                        Snackbar.make(
-                            view,
-                            "Cadastro realizado com sucesso",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                        controlador.popBackStack()
-                    } else {
-                        val mensagemErro = recurso.erro ?: "Ocorreu uma falha no cadastro"
-                        Snackbar.make(
-                            view,
-                            mensagemErro,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                    }
+            val confirmaSenha = cadastro_usuario_confirma_senha.editText?.text.toString()
 
-                }
-            })
+            var valido = true
+
+            if(email.isBlank()){
+                cadastro_usuario_email.error = "E-mail é necessário"
+                valido = false
+            }
+
+            if(senha.isBlank()){
+                cadastro_usuario_senha.error = "Senha é necessária"
+                valido = false
+            }
+
+            if(senha != confirmaSenha){
+                cadastro_usuario_confirma_senha.error = "Senhas diferentes"
+                valido = false
+            }
+
+            if(valido){
+                viewModel.cadastra(email, senha).observe(viewLifecycleOwner, Observer {
+                    it?.let {recurso ->
+                        if(recurso.dado){
+                            Snackbar.make(
+                                view,
+                                "Cadastro realizado com sucesso",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                            controlador.popBackStack()
+                        } else {
+                            val mensagemErro = recurso.erro ?: "Ocorreu uma falha no cadastro"
+                            Snackbar.make(
+                                view,
+                                mensagemErro,
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    }
+                })
+            }
         }
     }
 
