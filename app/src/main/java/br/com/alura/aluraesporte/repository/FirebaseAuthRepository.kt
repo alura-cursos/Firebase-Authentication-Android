@@ -12,16 +12,8 @@ private const val TAG = "FirebaseAuthRepository"
 
 class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
 
-    private fun desloga(firebaseAuth: FirebaseAuth) {
+    fun desloga() {
         firebaseAuth.signOut()
-    }
-
-    private fun verificaUsuario(firebaseAuth: FirebaseAuth) {
-        val usuarioFirebase: FirebaseUser? = firebaseAuth.currentUser
-        if (usuarioFirebase != null) {
-
-        } else {
-        }
     }
 
     private fun autenticaUsuario(firebaseAuth: FirebaseAuth) {
@@ -56,6 +48,14 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
         is FirebaseAuthInvalidCredentialsException -> "E-mail inválido"
         is FirebaseAuthUserCollisionException -> "E-mail já cadastrado"
         else -> "Erro desconhecido"
+    }
+
+    fun estaLogado(): Boolean {
+        val usuarioFirebase: FirebaseUser? = firebaseAuth.currentUser
+        if (usuarioFirebase != null) {
+            return true
+        }
+        return false
     }
 
 }

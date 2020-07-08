@@ -1,24 +1,16 @@
 package br.com.alura.aluraesporte.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.alura.aluraesporte.R
 import br.com.alura.aluraesporte.ui.viewmodel.EstadoAppViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.android.viewmodel.ext.android.viewModel
-
-private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 

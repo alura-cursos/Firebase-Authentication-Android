@@ -1,19 +1,23 @@
 package br.com.alura.aluraesporte.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import br.com.alura.aluraesporte.repository.FirebaseAuthRepository
 import br.com.alura.aluraesporte.repository.LoginRepository
 
-class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
+class LoginViewModel(
+    private val repository: LoginRepository,
+    private val firebaseAuthRepository: FirebaseAuthRepository
+) : ViewModel() {
 
-    fun loga(){
+    fun loga() {
         repository.loga()
     }
 
     fun desloga() {
-        repository.desloga()
+        firebaseAuthRepository.desloga()
     }
 
-    fun estaLogado(): Boolean = repository.estaLogado()
+    fun estaLogado(): Boolean = firebaseAuthRepository.estaLogado()
 
     fun naoEstaLogado(): Boolean = !estaLogado()
 
