@@ -16,13 +16,6 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
         firebaseAuth.signOut()
     }
 
-    private fun autenticaUsuario(firebaseAuth: FirebaseAuth) {
-        firebaseAuth.signInWithEmailAndPassword("alex@aluraesporte.com", "teste123")
-            .addOnSuccessListener {
-            }.addOnFailureListener {
-            }
-    }
-
     fun cadastra(usuario: Usuario): LiveData<Resource<Boolean>> {
         val liveData = MutableLiveData<Resource<Boolean>>()
         try {
@@ -32,7 +25,7 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
                 Log.i(TAG, "cadastra: cadastro sucedido")
                 liveData.value = Resource(true)
             }
-            tarefa.addOnFailureListener {exception ->
+            tarefa.addOnFailureListener { exception ->
                 Log.e(TAG, "cadastra: cadastro falhou", exception)
                 val mensagemErro: String = devolveErroDeCadastro(exception)
                 liveData.value = Resource(false, mensagemErro)
@@ -56,6 +49,20 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
             return true
         }
         return false
+    }
+
+    fun autentica(usuario: Usuario) : LiveData<Resource<Boolean>> {
+        val liveData = MutableLiveData<Resource<Boolean>>()
+        firebaseAuth.signInWithEmailAndPassword(usuario.email, usuario.senha)
+            .addOnCompleteListener { tarefa ->
+                if(tarefa.isSuccessful){
+                    liveData.value = Resource(true)
+                } else {
+                    Log.e(TAG, "autentica: ", tarefa.exception)
+                    liveData.value = Resource(false, "erro na autenticação")
+                }
+            }
+        return liveData
     }
 
 }

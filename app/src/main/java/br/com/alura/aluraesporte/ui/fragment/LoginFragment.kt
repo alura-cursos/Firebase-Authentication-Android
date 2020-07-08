@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import br.com.alura.aluraesporte.R
+import br.com.alura.aluraesporte.extensions.snackBar
+import br.com.alura.aluraesporte.model.Usuario
 import br.com.alura.aluraesporte.ui.viewmodel.ComponentesVisuais
 import br.com.alura.aluraesporte.ui.viewmodel.EstadoAppViewModel
 import br.com.alura.aluraesporte.ui.viewmodel.LoginViewModel
@@ -38,8 +41,21 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         estadoAppViewModel.temComponentes = ComponentesVisuais()
         login_botao_logar.setOnClickListener {
-            viewModel.loga()
-            vaiParaListaProdutos()
+            val email = login_email.editText?.text.toString()
+            val senha = login_senha.editText?.text.toString()
+            viewModel.autentica(Usuario(email, senha))
+                .observe(viewLifecycleOwner, Observer {
+                    it?.let {recurso ->
+                        if(recurso.dado){
+                            vaiParaListaProdutos()
+                        } else {
+                            val mensagemErro = recurso.erro ?: "Erro durante a autenticação"
+                            view.snackBar(mensagemErro)
+                        }
+
+                    }
+                })
+
         }
         login_botao_cadastrar_usuario.setOnClickListener {
             val direcao = LoginFragmentDirections
