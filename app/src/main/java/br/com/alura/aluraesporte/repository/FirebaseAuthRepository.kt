@@ -59,7 +59,12 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
                     liveData.value = Resource(true)
                 } else {
                     Log.e(TAG, "autentica: ", tarefa.exception)
-                    liveData.value = Resource(false, "erro na autenticação")
+                    val mensagemErro: String = when(tarefa.exception){
+                        is FirebaseAuthInvalidUserException,
+                        is FirebaseAuthInvalidCredentialsException -> "E-mail ou senha incorretos"
+                        else -> "Erro desconhecido"
+                    }
+                    liveData.value = Resource(false, mensagemErro)
                 }
             }
         return liveData
