@@ -40,28 +40,64 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         estadoAppViewModel.temComponentes = ComponentesVisuais()
-        login_botao_logar.setOnClickListener {
-            val email = login_email.editText?.text.toString()
-            val senha = login_senha.editText?.text.toString()
-            viewModel.autentica(Usuario(email, senha))
-                .observe(viewLifecycleOwner, Observer {
-                    it?.let {recurso ->
-                        if(recurso.dado){
-                            vaiParaListaProdutos()
-                        } else {
-                            val mensagemErro = recurso.erro ?: "Erro durante a autenticação"
-                            view.snackBar(mensagemErro)
-                        }
+        configuraBotaoLogin()
+        configuraBotaoCadastro()
+    }
 
-                    }
-                })
-
-        }
+    private fun configuraBotaoCadastro() {
         login_botao_cadastrar_usuario.setOnClickListener {
             val direcao = LoginFragmentDirections
                 .acaoLoginParaCadastroUsuario()
             controlador.navigate(direcao)
         }
+    }
+
+    private fun configuraBotaoLogin() {
+        login_botao_logar.setOnClickListener {
+
+            limpaCampos()
+
+            val email = login_email.editText?.text.toString()
+            val senha = login_senha.editText?.text.toString()
+
+            if (validaCampos(email, senha)) {
+                autentica(email, senha)
+            }
+        }
+    }
+
+    private fun autentica(email: String, senha: String) {
+        viewModel.autentica(Usuario(email, senha))
+            .observe(viewLifecycleOwner, Observer {
+                it?.let { recurso ->
+                    if (recurso.dado) {
+                        vaiParaListaProdutos()
+                    } else {
+                        val mensagemErro = recurso.erro ?: "Erro durante a autenticação"
+                        view?.snackBar(mensagemErro)
+                    }
+                }
+            })
+    }
+
+    private fun validaCampos(email: String, senha: String): Boolean {
+        var valido = true
+
+        if (email.isBlank()) {
+            login_email.error = "E-mail é obrigatório"
+            valido = false
+        }
+
+        if (senha.isBlank()) {
+            login_senha.error = "Senha é obrigatória"
+            valido = false
+        }
+        return valido
+    }
+
+    private fun limpaCampos() {
+        login_email.error = null
+        login_senha.error = null
     }
 
     private fun vaiParaListaProdutos() {

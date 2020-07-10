@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import br.com.alura.aluraesporte.model.Usuario
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import java.lang.Exception
 import java.lang.IllegalArgumentException
@@ -51,23 +52,29 @@ class FirebaseAuthRepository(private val firebaseAuth: FirebaseAuth) {
         return false
     }
 
-    fun autentica(usuario: Usuario) : LiveData<Resource<Boolean>> {
+    fun autentica(usuario: Usuario): LiveData<Resource<Boolean>> {
         val liveData = MutableLiveData<Resource<Boolean>>()
-        firebaseAuth.signInWithEmailAndPassword(usuario.email, usuario.senha)
-            .addOnCompleteListener { tarefa ->
-                if(tarefa.isSuccessful){
-                    liveData.value = Resource(true)
-                } else {
-                    Log.e(TAG, "autentica: ", tarefa.exception)
-                    val mensagemErro: String = when(tarefa.exception){
-                        is FirebaseAuthInvalidUserException,
-                        is FirebaseAuthInvalidCredentialsException -> "E-mail ou senha incorretos"
-                        else -> "Erro desconhecido"
+        try {
+            firebaseAuth.signInWithEmailAndPassword(usuario.email, usuario.senha)
+                .addOnCompleteListener { tarefa ->
+                    if (tarefa.isSuccessful) {
+                        liveData.value = Resource(true)
+                    } else {
+                        Log.e(TAG, "autentica: ", tarefa.exception)
+                        val mensagemErro: String = devolveErroDeAutenticao(tarefa.exception)
+                        liveData.value = Resource(false, mensagemErro)
                     }
-                    liveData.value = Resource(false, mensagemErro)
                 }
-            }
+        } catch (e: IllegalArgumentException) {
+            liveData.value = Resource(false, "E-mail ou senha não pode ser vazio")
+        }
         return liveData
+    }
+
+    private fun devolveErroDeAutenticao(exception: Exception?): String = when (exception) {
+        is FirebaseAuthInvalidUserException,
+        is FirebaseAuthInvalidCredentialsException -> "E-mail ou senha incorretos"
+        else -> "Erro desconhecido"
     }
 
 }

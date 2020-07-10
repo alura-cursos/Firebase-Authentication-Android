@@ -10,7 +10,6 @@ import br.com.alura.aluraesporte.database.dao.PagamentoDAO
 import br.com.alura.aluraesporte.database.dao.ProdutoDAO
 import br.com.alura.aluraesporte.model.Produto
 import br.com.alura.aluraesporte.repository.FirebaseAuthRepository
-import br.com.alura.aluraesporte.repository.LoginRepository
 import br.com.alura.aluraesporte.repository.PagamentoRepository
 import br.com.alura.aluraesporte.repository.ProdutoRepository
 import br.com.alura.aluraesporte.ui.fragment.DetalhesProdutoFragment
@@ -81,7 +80,6 @@ val daoModule = module {
     single<PagamentoDAO> { get<AppDatabase>().pagamentoDao() }
     single<ProdutoRepository> { ProdutoRepository(get()) }
     single<PagamentoRepository> { PagamentoRepository(get()) }
-    single<LoginRepository> { LoginRepository(get()) }
     single<FirebaseAuthRepository> { FirebaseAuthRepository(get()) }
     single<SharedPreferences> { PreferenceManager.getDefaultSharedPreferences(get()) }
 }
@@ -98,7 +96,7 @@ val viewModelModule = module {
     viewModel<ProdutosViewModel> { ProdutosViewModel(get()) }
     viewModel<DetalhesProdutoViewModel> { (id: Long) -> DetalhesProdutoViewModel(id, get()) }
     viewModel<PagamentoViewModel> { PagamentoViewModel(get(), get()) }
-    viewModel<LoginViewModel> { LoginViewModel(get(), get()) }
+    viewModel<LoginViewModel> { LoginViewModel(get()) }
     viewModel<EstadoAppViewModel> { EstadoAppViewModel() }
     viewModel<CadastroUsuarioViewModel> { CadastroUsuarioViewModel(get()) }
 }
