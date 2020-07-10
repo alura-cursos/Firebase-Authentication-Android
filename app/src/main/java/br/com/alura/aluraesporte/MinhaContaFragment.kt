@@ -5,11 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import br.com.alura.aluraesporte.ui.fragment.BaseFragment
 import br.com.alura.aluraesporte.ui.viewmodel.MinhaContaViewModel
 import kotlinx.android.synthetic.main.minha_conta.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MinhaContaFragment : Fragment() {
+class MinhaContaFragment : BaseFragment() {
 
     private val viewModel: MinhaContaViewModel by viewModel()
 
@@ -22,7 +24,11 @@ class MinhaContaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        minha_conta_email.text = viewModel.email
+        viewModel.usuario.observe(viewLifecycleOwner, Observer {
+            it?.let {usuario ->
+                minha_conta_email.text = usuario.email
+            }
+        })
     }
 
 }

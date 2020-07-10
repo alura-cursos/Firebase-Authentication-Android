@@ -1,10 +1,12 @@
 package br.com.alura.aluraesporte.ui.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import br.com.alura.aluraesporte.model.Usuario
 import br.com.alura.aluraesporte.repository.FirebaseAuthRepository
 
-class MinhaContaViewModel(private val repository: FirebaseAuthRepository) : ViewModel() {
+class MinhaContaViewModel(repository: FirebaseAuthRepository) : ViewModel() {
 
-    val email: String = "alex@aluraesporte.com"
+    val usuario: LiveData<Usuario> = repository.usuario()
 
 }
