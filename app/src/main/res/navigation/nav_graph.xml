@@ -96,4 +96,9 @@
         android:name="br.com.alura.aluraesporte.ui.fragment.ListaPagamentosFragment"
         android:label="Lista de pagamentos"
         tools:layout="@layout/lista_pagamentos"/>
+    <fragment
+        android:id="@+id/minhaConta"
+        android:name="br.com.alura.aluraesporte.MinhaContaFragment"
+        android:label="Minha conta"
+        tools:layout="@layout/minha_conta" />
 </navigation>

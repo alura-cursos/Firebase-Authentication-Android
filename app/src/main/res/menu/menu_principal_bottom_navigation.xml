@@ -8,4 +8,8 @@
         android:id="@+id/listaPagamentos"
         android:icon="@drawable/ic_action_pagamentos"
         android:title="Pagamentos" />
+    <item
+        android:id="@+id/minhaConta"
+        android:icon="@drawable/ic_action_minha_conta"
+        android:title="Minha conta" />
 </menu>
